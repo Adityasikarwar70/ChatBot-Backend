@@ -1,24 +1,8 @@
-import express from "express";
-import { config } from "dotenv";
-import morgan from "morgan";
-import appRouter from "./routes/index.js";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-config();
+import app from "./index.js";
+import { connectToDatabase } from "./db/connection.js";
 
-const app = express();
-
-// middlewares
-// app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-app.use(cors({ origin: "https://aschatbot.netlify.app", credentials: true }));
-
-app.use(express.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
-
-// we can remove it at deployment
-// app.use(morgan("dev"));
-
-// middleware
-app.use("/api/v1", appRouter);
-
-export default app;
+const PORT = process.env.PORT 
+connectToDatabase().then(()=>{
+  app.listen (PORT,()=> console.log("Server Open and connected to database" ))
+  })
+  .catch((err) => console.log(err));
